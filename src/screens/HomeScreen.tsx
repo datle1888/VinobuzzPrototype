@@ -8,9 +8,6 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 export default function HomeScreen({ navigation }: Props) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Vinobuzz Prototype</Text>
-      <Text style={styles.subtitle}>Step 1: Navigation foundation</Text>
-
       <Button
         title="Go to sample product"
         onPress={() =>

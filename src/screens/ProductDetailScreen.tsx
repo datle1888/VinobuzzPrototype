@@ -1,10 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../types/navigation';
 import { getMockProductById } from '../data/mockProducts';
 import ProductSkeleton from '../components/product/ProductSkeleton';
 import { formatPrice } from '../utils/formatPrice';
+import ProductGallery from '../components/product/ProductGallery';
+import ExpandableSection from '../components/product/ExpandableSection';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ProductDetail'>;
 
@@ -15,6 +17,8 @@ export default function ProductDetailScreen({ route }: Props) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
+
     const timer = setTimeout(() => {
       setLoading(false);
     }, 800);
@@ -37,10 +41,12 @@ export default function ProductDetailScreen({ route }: Props) {
 
   return (
     <View style={styles.screen}>
-      <View style={styles.content}>
-        <View style={styles.galleryPlaceholder}>
-          <Text style={styles.galleryText}>Gallery (next step)</Text>
-        </View>
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <ProductGallery images={product.images} />
 
         <View style={styles.body}>
           <Text style={styles.title}>{product.name}</Text>
@@ -51,10 +57,13 @@ export default function ProductDetailScreen({ route }: Props) {
           <Text style={styles.sectionLabel}>Description</Text>
           <Text style={styles.description}>{product.description}</Text>
 
-          <Text style={styles.sectionLabel}>Tasting Notes</Text>
-          <Text style={styles.description}>{product.tastingNotes}</Text>
+          <ExpandableSection
+            title="Tasting notes"
+            content={product.tastingNotes}
+            defaultExpanded
+          />
         </View>
-      </View>
+      </ScrollView>
 
       <View style={styles.stickyCta}>
         <Button title="Add to Cart" onPress={() => {}} />
@@ -68,6 +77,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFF',
   },
+  scroll: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 110, // reserve space for sticky CTA
+  },
   centered: {
     flex: 1,
     alignItems: 'center',
@@ -75,24 +90,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     backgroundColor: '#FFF',
   },
-  content: {
-    flex: 1,
-  },
-  galleryPlaceholder: {
-    height: 280,
-    backgroundColor: '#F1F1F1',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#DDD',
-  },
-  galleryText: {
-    color: '#666',
-    fontSize: 14,
-  },
   body: {
     padding: 16,
-    paddingBottom: 100, // reserve space for sticky CTA
   },
   title: {
     fontSize: 24,
@@ -109,13 +108,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '600',
     color: '#7A1E1E',
-    marginBottom: 20,
+    marginBottom: 16,
   },
   sectionLabel: {
     fontSize: 13,
     fontWeight: '700',
     color: '#333',
-    marginTop: 8,
     marginBottom: 6,
     textTransform: 'uppercase',
   },

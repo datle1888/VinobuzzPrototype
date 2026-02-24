@@ -5,6 +5,16 @@ Minimal React Native prototype for a take-home exercise demonstrating by Danny L
 - **Chatbox** (floating FAB + overlay chat with mock messages)
 - **Product Detail** (swipeable gallery, loading state, sticky CTA, expandable section)
 
+## Screenshots
+
+(docs/screenshots/1.png)
+(docs/screenshots/2.png)
+(docs/screenshots/3.png)
+(docs/screenshots/4.png)
+(docs/screenshots/5.png)
+(docs/screenshots/6.png)
+(docs/screenshots/7.png)
+
 ## Features
 
 ### 1) Chatbox (FAB + Overlay)

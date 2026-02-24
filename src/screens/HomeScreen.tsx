@@ -11,8 +11,7 @@ export default function HomeScreen({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Vinobuzz Prototype</Text>
-      <Text style={styles.subtitle}>Step 6: Offline banner toggle</Text>
+      <Text style={styles.title}>Vinobuzz Prototype App By Danny</Text>
 
       <View style={styles.actions}>
         <Button

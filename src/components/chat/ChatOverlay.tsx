@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
+  FlatList,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -7,17 +8,55 @@ import {
   Text,
   View,
 } from 'react-native';
+import type { ListRenderItem } from 'react-native';
+import type { ChatMessage, QuickReply } from '../../types/chat';
+import ChatMessageBubble from './ChatMessageBubble';
+import TypingIndicator from './TypingIndicator';
+import QuickReplyChips from './QuickReplyChips';
 
 type Props = {
   visible: boolean;
+  messages: ChatMessage[];
+  isTyping: boolean;
+  quickReplies: QuickReply[];
+  onPressQuickReply: (reply: QuickReply) => void;
+  onPressProductAction: (productId: string) => void;
   onMinimize: () => void;
   onClose: () => void;
 };
 
-export default function ChatOverlay({ visible, onMinimize, onClose }: Props) {
+export default function ChatOverlay({
+  visible,
+  messages,
+  isTyping,
+  quickReplies,
+  onPressQuickReply,
+  onPressProductAction,
+  onMinimize,
+  onClose,
+}: Props) {
+  const listRef = useRef<FlatList<ChatMessage>>(null);
+
+  useEffect(() => {
+    if (visible) {
+      const timer = setTimeout(() => {
+        listRef.current?.scrollToEnd({ animated: true });
+      }, 50);
+
+      return () => clearTimeout(timer);
+    }
+  }, [visible, messages.length, isTyping]);
+
   if (!visible) {
     return null;
   }
+
+  const renderItem: ListRenderItem<ChatMessage> = ({ item }) => (
+    <ChatMessageBubble
+      message={item}
+      onPressProductAction={onPressProductAction}
+    />
+  );
 
   return (
     <View pointerEvents="box-none" style={styles.root}>
@@ -53,13 +92,26 @@ export default function ChatOverlay({ visible, onMinimize, onClose }: Props) {
             </View>
           </View>
 
-          <View style={styles.body}>
-            <Text style={styles.placeholderTitle}>Chat overlay ready</Text>
-            <Text style={styles.placeholderText}>
-              Next step we will add mock messages, typing indicator, and quick
-              replies.
-            </Text>
+          <View style={styles.messagesArea}>
+            <FlatList
+              ref={listRef}
+              data={messages}
+              keyExtractor={item => item.id}
+              renderItem={renderItem}
+              contentContainerStyle={styles.messagesContent}
+              showsVerticalScrollIndicator={false}
+            />
+            {isTyping ? (
+              <View style={styles.typingWrap}>
+                <TypingIndicator />
+              </View>
+            ) : null}
           </View>
+
+          <QuickReplyChips
+            replies={quickReplies}
+            onPressReply={onPressQuickReply}
+          />
         </View>
       </KeyboardAvoidingView>
     </View>
@@ -80,9 +132,9 @@ const styles = StyleSheet.create({
   panel: {
     marginHorizontal: 12,
     marginBottom: 12,
-    height: '68%',
-    minHeight: 420,
-    maxHeight: 560,
+    height: '72%',
+    minHeight: 460,
+    maxHeight: 620,
     backgroundColor: '#FFF',
     borderRadius: 18,
     overflow: 'hidden',
@@ -130,22 +182,15 @@ const styles = StyleSheet.create({
     color: '#333',
     fontWeight: '600',
   },
-  body: {
+  messagesArea: {
     flex: 1,
-    padding: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
-  placeholderTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    marginBottom: 8,
-    color: '#111',
+  messagesContent: {
+    paddingHorizontal: 12,
+    paddingTop: 12,
+    paddingBottom: 8,
   },
-  placeholderText: {
-    fontSize: 14,
-    lineHeight: 21,
-    color: '#555',
-    textAlign: 'center',
+  typingWrap: {
+    paddingHorizontal: 12,
   },
 });

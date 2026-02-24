@@ -7,13 +7,21 @@ Minimal React Native prototype for a take-home exercise demonstrating by Danny L
 
 ## Screenshots
 
-(docs/screenshots/1.png)
-(docs/screenshots/2.png)
-(docs/screenshots/3.png)
-(docs/screenshots/4.png)
-(docs/screenshots/5.png)
-(docs/screenshots/6.png)
-(docs/screenshots/7.png)
+<p align="center">
+  <img src="docs/screenshots/1.png" alt="Home screen" width="230" />
+  <img src="docs/screenshots/2.png" alt="Chat overlay" width="230" />
+  <img src="docs/screenshots/3.png" alt="Product detail" width="230" />
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/4.png" alt="Product gallery" width="230" />
+  <img src="docs/screenshots/5.png" alt="Expandable tasting notes" width="230" />
+  <img src="docs/screenshots/6.png" alt="Offline banner" width="230" />
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/7.png" alt="Deep link product open" width="230" />
+</p>
 
 ## Features
 
